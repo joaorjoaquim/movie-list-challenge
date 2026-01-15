@@ -1,8 +1,8 @@
-import { newDb } from 'pg-mem';
+import { IMemoryDb, newDb } from 'pg-mem';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-let db: any;
+let db: IMemoryDb;
 
 export async function initializeDatabase(): Promise<void> {
   db = newDb();

@@ -1,6 +1,6 @@
 # Movie List Challenge
 
-API RESTful para leitura da lista de indicados e vencedores da categoria Pior Filme do Golden Raspberry Awards.
+API RESTful para o teste de leitura da lista de indicados e vencedores da categoria pior filme do Golden Raspberry Awards utilizando um banco em memória.
 
 ## Requisitos
 
@@ -15,11 +15,12 @@ API RESTful para leitura da lista de indicados e vencedores da categoria Pior Fi
 docker-compose up --build
 ```
 
-Ou apenas com Docker:
+A aplicacao estara disponivel em `http://localhost:5000`
+
+Para parar:
 
 ```bash
-docker build -t movie-list-challenge .
-docker run -p 5000:5000 movie-list-challenge
+docker-compose down
 ```
 
 ### Opcao 2: Local
@@ -28,19 +29,7 @@ docker run -p 5000:5000 movie-list-challenge
 npm install
 # ou
 yarn install
-```
 
-## Executando a aplicacao
-
-### Com Docker
-
-```bash
-docker-compose up
-```
-
-### Local
-
-```bash
 npm run dev
 # ou
 yarn dev
@@ -56,16 +45,18 @@ npm test
 yarn test
 ```
 
+Os testes sao de integracao e validam o funcionamento completo da API.
+
 ## Estrutura do projeto
 
 ```
 src/
   config/         # Configuracoes (banco de dados)
   controllers/    # Handlers HTTP
-  middlewares/    # Middlewares (tratamento de erros)
+  middlewares/    # Middlewares (nesse caso, tratamento de erros)
   repositories/   # Camada de acesso a dados
   routes/         # Definicao de rotas
-  services/       # Logica de negocio
+  services/       # Lógica de negócio
   utils/          # Funcoes utilitarias
   app.ts          # Configuracao do Express
   server.ts       # Entry point
@@ -75,34 +66,43 @@ src/
 
 ### GET /api/producers/intervals
 
-Retorna os produtores com maior e menor intervalo entre dois premios consecutivos.
+Retorna os produtores com maior e menor intervalo entre dois premios consecutivos. (Por mais que o retorno sejam arrays para min e max, dado a especificação, o resultado é um producer pra cada caso)
 
-**Resposta:**
+**Exemplo de resposta:**
 
 ```json
 {
   "min": [
     {
-      "producer": "Producer 1",
+      "producer": "Joel Silver",
       "interval": 1,
-      "previousWin": 2008,
-      "followingWin": 2009
+      "previousWin": 1990,
+      "followingWin": 1991
     }
   ],
   "max": [
     {
-      "producer": "Producer 2",
-      "interval": 99,
-      "previousWin": 1900,
-      "followingWin": 1999
+      "producer": "Matthew Vaughn",
+      "interval": 13,
+      "previousWin": 2002,
+      "followingWin": 2015
     }
   ]
 }
 ```
 
+**Descricao:**
+
+- `min`: Array com todos os produtores que tiveram o menor intervalo entre dois premios consecutivos (pode haver multiplos em caso de empate)
+- `max`: Array com todos os produtores que tiveram o maior intervalo entre dois premios consecutivos (pode haver multiplos em caso de empate)
+- Apenas produtores com 2 ou mais premios sao considerados
+- Cada intervalo representa um par de premios consecutivos do mesmo produtor
+
 ## Banco de dados
 
 A aplicacao utiliza PostgreSQL em memoria atraves da biblioteca `pg-mem`. Os dados sao carregados automaticamente do arquivo `movielist.csv` na inicializacao da aplicacao.
+
+**Importante**: O arquivo `movielist.csv` deve estar na raiz do projeto.
 
 ## Scripts disponiveis
 
@@ -112,29 +112,3 @@ A aplicacao utiliza PostgreSQL em memoria atraves da biblioteca `pg-mem`. Os dad
 - `npm test` / `yarn test` - Executa os testes de integracao
 - `npm run lint` / `yarn lint` - Executa o linter
 - `npm run format` / `yarn format` - Formata o codigo com Prettier
-
-## Docker
-
-### Build da imagem
-
-```bash
-docker build -t movie-list-challenge .
-```
-
-### Executar container
-
-```bash
-docker run -p 5000:5000 movie-list-challenge
-```
-
-### Docker Compose
-
-```bash
-docker-compose up --build
-```
-
-Para parar:
-
-```bash
-docker-compose down
-```
