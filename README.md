@@ -9,6 +9,21 @@ API RESTful para leitura da lista de indicados e vencedores da categoria Pior Fi
 
 ## Instalacao
 
+### Opcao 1: Docker (Recomendado)
+
+```bash
+docker-compose up --build
+```
+
+Ou apenas com Docker:
+
+```bash
+docker build -t movie-list-challenge .
+docker run -p 5000:5000 movie-list-challenge
+```
+
+### Opcao 2: Local
+
 ```bash
 npm install
 # ou
@@ -16,6 +31,14 @@ yarn install
 ```
 
 ## Executando a aplicacao
+
+### Com Docker
+
+```bash
+docker-compose up
+```
+
+### Local
 
 ```bash
 npm run dev
@@ -89,3 +112,29 @@ A aplicacao utiliza PostgreSQL em memoria atraves da biblioteca `pg-mem`. Os dad
 - `npm test` / `yarn test` - Executa os testes de integracao
 - `npm run lint` / `yarn lint` - Executa o linter
 - `npm run format` / `yarn format` - Formata o codigo com Prettier
+
+## Docker
+
+### Build da imagem
+
+```bash
+docker build -t movie-list-challenge .
+```
+
+### Executar container
+
+```bash
+docker run -p 5000:5000 movie-list-challenge
+```
+
+### Docker Compose
+
+```bash
+docker-compose up --build
+```
+
+Para parar:
+
+```bash
+docker-compose down
+```

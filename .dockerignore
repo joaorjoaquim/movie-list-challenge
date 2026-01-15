@@ -1,0 +1,17 @@
+node_modules
+dist
+.git
+.gitignore
+.env
+.env.local
+*.log
+coverage
+.nyc_output
+tests
+.vscode
+.idea
+*.swp
+*.swo
+README.md
+VALIDACAO.md
+COMO_VALIDAR.md
