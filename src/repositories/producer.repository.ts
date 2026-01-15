@@ -16,16 +16,19 @@ export class ProducerRepository {
   async findWithMultipleWins(): Promise<Producer[]> {
     const db = getConnection();
     try {
-      return await db.public.many(
-        `SELECT p.id, p.name
+      const allProducersWithWins = await db.public.many(
+        `SELECT p.id, p.name, COUNT(m.id) as win_count
          FROM producers p
          INNER JOIN movie_producers mp ON p.id = mp.producer_id
          INNER JOIN movies m ON mp.movie_id = m.id
          WHERE m.winner = true
          GROUP BY p.id, p.name
-         HAVING COUNT(m.id) >= 2
          ORDER BY p.name ASC`
       );
+      
+      return allProducersWithWins
+        .filter((p: Producer & { win_count: number }) => p.win_count >= 2)
+        .map((p: Producer & { win_count: number }) => ({ id: p.id, name: p.name }));
     } catch {
       return [];
     }
