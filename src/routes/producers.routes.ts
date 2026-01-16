@@ -1,9 +1,10 @@
-import { Router } from 'express';
-import { ProducersController } from '../controllers/producers.controller';
+import { IRouter } from '../domain/interfaces/http/IRouter';
+import { container } from '../config/container';
 
-const router = Router();
-const producersController = new ProducersController();
-
-router.get('/intervals', (req, res) => producersController.getIntervals(req, res));
-
-export default router;
+export function createProducersRoutes(router: IRouter): void {
+  const producersController = container.getProducersController();
+  
+  router.get('/producers/intervals', (req, res) => 
+    producersController.getIntervals(req, res)
+  );
+}

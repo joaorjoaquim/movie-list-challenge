@@ -1,8 +1,10 @@
 import { IMemoryDb, newDb } from 'pg-mem';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { IDatabaseConnection, PgMemConnection } from '../infrastructure/database/pg-mem/PgMemConnection';
 
 let db: IMemoryDb;
+let connection: IDatabaseConnection;
 
 export async function initializeDatabase(): Promise<void> {
   db = newDb();
@@ -13,6 +15,8 @@ export async function initializeDatabase(): Promise<void> {
 
   await createSchema();
   await loadCsvData();
+  
+  connection = new PgMemConnection(db);
 }
 
 async function createSchema(): Promise<void> {
@@ -106,9 +110,9 @@ async function loadCsvData(): Promise<void> {
   }
 }
 
-export function getConnection() {
-  if (!db) {
+export function getConnection(): IDatabaseConnection {
+  if (!connection) {
     throw new Error('Database not initialized');
   }
-  return db;
+  return connection;
 }

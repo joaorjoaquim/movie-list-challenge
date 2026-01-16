@@ -1,8 +1,6 @@
-import { Router } from 'express';
-import producersRoutes from './producers.routes';
+import { IRouter } from '../domain/interfaces/http/IRouter';
+import { createProducersRoutes } from './producers.routes';
 
-const router = Router();
-
-router.use('/producers', producersRoutes);
-
-export default router;
+export function createRoutes(router: IRouter): void {
+  createProducersRoutes(router);
+}

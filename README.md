@@ -51,15 +51,21 @@ Os testes sao de integracao e validam o funcionamento completo da API.
 
 ```
 src/
-  config/         # Configuracoes (banco de dados)
-  controllers/    # Handlers HTTP
-  middlewares/    # Middlewares (nesse caso, tratamento de erros)
-  repositories/   # Camada de acesso a dados
-  routes/         # Definicao de rotas
-  services/       # Lógica de negócio
-  utils/          # Funcoes utilitarias
-  app.ts          # Configuracao do Express
-  server.ts       # Entry point
+  config/              # Configuracoes (banco de dados, container de dependencias)
+  controllers/         # Handlers HTTP
+  domain/              # Camada de dominio (entidades e interfaces)
+    entities/          # Entidades do dominio
+    interfaces/        # Contratos (repositories, services, HTTP)
+  infrastructure/      # Implementacoes concretas
+    database/          # Adaptadores de banco de dados
+    http/              # Adaptadores HTTP (Express)
+  middlewares/         # Middlewares (tratamento de erros)
+  repositories/        # Camada de acesso a dados
+  routes/              # Definicao de rotas
+  services/            # Logica de negocio
+  utils/               # Funcoes utilitarias
+  app.ts               # Configuracao do Express
+  server.ts            # Entry point
 ```
 
 ## API
