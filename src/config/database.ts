@@ -2,11 +2,17 @@ import { IMemoryDb, newDb } from 'pg-mem';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { IDatabaseConnection, PgMemConnection } from '../infrastructure/database/pg-mem/PgMemConnection';
+import { validateCsvStructure } from '../utils/validateCsvStructure';
 
 let db: IMemoryDb;
 let connection: IDatabaseConnection;
 
 export async function initializeDatabase(): Promise<void> {
+  const validation = validateCsvStructure();
+  if (!validation.isValid) {
+    throw new Error(`CSV validation failed:\n${validation.errors.join('\n')}`);
+  }
+
   db = newDb();
   db.public.registerFunction({
     name: 'current_database',

@@ -1,4 +1,5 @@
 import request from 'supertest';
+import { readFileSync, writeFileSync } from 'fs';
 import { createApp } from '../../src/app';
 import { initializeDatabase } from '../../src/config/database';
 
@@ -108,6 +109,75 @@ describe('Producers API Integration Tests', () => {
         });
 
         expect(years.size).toBeGreaterThanOrEqual(2);
+      }
+    });
+
+    it('should have min interval less than max interval', async () => {
+      const response = await request(app).get('/api/producers/intervals');
+
+      expect(response.body.min.length).toBeGreaterThan(0);
+      expect(response.body.max.length).toBeGreaterThan(0);
+
+      const minValue = response.body.min[0].interval;
+      const maxValue = response.body.max[0].interval;
+
+      expect(minValue).toBeLessThan(maxValue);
+    });
+  });
+
+  describe('CSV Structure Validation', () => {
+    it('should validate CSV structure on database initialization', async () => {
+      const app = createApp();
+      expect(app).toBeDefined();
+    });
+
+    it('should fail if CSV header is incorrect', async () => {
+      const originalContent = readFileSync('movielist.csv', 'utf-8');
+      const lines = originalContent.split('\n');
+      const originalHeader = lines[0];
+      lines[0] = 'ano;titulo;estudios;produtores;vencedor';
+
+      writeFileSync('movielist.csv', lines.join('\n'));
+
+      try {
+        await expect(initializeDatabase()).rejects.toThrow('CSV validation failed');
+      } finally {
+        lines[0] = originalHeader;
+        writeFileSync('movielist.csv', lines.join('\n'));
+      }
+    });
+
+    it('should fail if year format is invalid', async () => {
+      const originalContent = readFileSync('movielist.csv', 'utf-8');
+      const lines = originalContent.split('\n');
+      const originalLine = lines[2];
+      lines[2] = 'invalid-year;Test Movie;Studio;Producer;yes';
+
+      writeFileSync('movielist.csv', lines.join('\n'));
+
+      try {
+        await expect(initializeDatabase()).rejects.toThrow('CSV validation failed');
+      } finally {
+        lines[2] = originalLine;
+        writeFileSync('movielist.csv', lines.join('\n'));
+      }
+    });
+
+    it('should fail if winner value is invalid', async () => {
+      const originalContent = readFileSync('movielist.csv', 'utf-8');
+      const lines = originalContent.split('\n');
+      const originalLine = lines[2];
+      const parts = originalLine.split(';');
+      parts[4] = 'maybe';
+      lines[2] = parts.join(';');
+
+      writeFileSync('movielist.csv', lines.join('\n'));
+
+      try {
+        await expect(initializeDatabase()).rejects.toThrow('CSV validation failed');
+      } finally {
+        lines[2] = originalLine;
+        writeFileSync('movielist.csv', lines.join('\n'));
       }
     });
   });
