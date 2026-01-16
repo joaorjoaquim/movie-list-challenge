@@ -1,17 +1,11 @@
-import { MovieRepository } from '../repositories/movie.repository';
-import { ProducerRepository } from '../repositories/producer.repository';
+import { IIntervalService, ProducerInterval } from '../domain/interfaces/services/IIntervalService';
+import { IMovieRepository } from '../domain/interfaces/repositories/IMovieRepository';
+import { IProducerRepository } from '../domain/interfaces/repositories/IProducerRepository';
 
-export interface ProducerInterval {
-  producer: string;
-  interval: number;
-  previousWin: number;
-  followingWin: number;
-}
-
-export class IntervalService {
+export class IntervalService implements IIntervalService {
   constructor(
-    private movieRepository: MovieRepository,
-    private producerRepository: ProducerRepository
+    private movieRepository: IMovieRepository,
+    private producerRepository: IProducerRepository
   ) {}
 
   async calculateIntervals(): Promise<{

@@ -1,22 +1,19 @@
-import { getConnection } from '../config/database';
+import { IProducerRepository } from '../domain/interfaces/repositories/IProducerRepository';
+import { Producer } from '../domain/entities/Producer';
+import { IDatabaseConnection } from '../infrastructure/database/pg-mem/PgMemConnection';
 
-export interface Producer {
-  id: number;
-  name: string;
-}
+export class ProducerRepository implements IProducerRepository {
+  constructor(private db: IDatabaseConnection) {}
 
-export class ProducerRepository {
   async findAll(): Promise<Producer[]> {
-    const db = getConnection();
-    return await db.public.many(
+    return await this.db.many(
       `SELECT id, name FROM producers ORDER BY name ASC`
     );
   }
 
   async findWithMultipleWins(): Promise<Producer[]> {
-    const db = getConnection();
     try {
-      const allProducersWithWins = await db.public.many(
+      const allProducersWithWins = await this.db.many(
         `SELECT p.id, p.name, COUNT(m.id) as win_count
          FROM producers p
          INNER JOIN movie_producers mp ON p.id = mp.producer_id

@@ -1,17 +1,12 @@
-import { getConnection } from '../config/database';
+import { IMovieRepository } from '../domain/interfaces/repositories/IMovieRepository';
+import { Movie } from '../domain/entities/Movie';
+import { IDatabaseConnection } from '../infrastructure/database/pg-mem/PgMemConnection';
 
-export interface Movie {
-  id: number;
-  year: number;
-  title: string;
-  studios: string | null;
-  winner: boolean;
-}
+export class MovieRepository implements IMovieRepository {
+  constructor(private db: IDatabaseConnection) {}
 
-export class MovieRepository {
   async findAllWinners(): Promise<Movie[]> {
-    const db = getConnection();
-    return await db.public.many(
+    return await this.db.many(
       `SELECT id, year, title, studios, winner 
        FROM movies 
        WHERE winner = true 
@@ -20,9 +15,8 @@ export class MovieRepository {
   }
 
   async findWinnersByProducer(producerId: number): Promise<Movie[]> {
-    const db = getConnection();
     try {
-      return await db.public.many(
+      return await this.db.many(
         `SELECT m.id, m.year, m.title, m.studios, m.winner
          FROM movies m
          INNER JOIN movie_producers mp ON m.id = mp.movie_id
