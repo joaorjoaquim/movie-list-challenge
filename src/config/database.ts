@@ -3,7 +3,6 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 let db: any;
-let connection: any;
 
 export async function initializeDatabase(): Promise<void> {
   db = newDb();
@@ -11,8 +10,6 @@ export async function initializeDatabase(): Promise<void> {
     name: 'current_database',
     implementation: () => 'test',
   });
-
-  connection = db.adapters.createPg();
 
   await createSchema();
   await loadCsvData();
