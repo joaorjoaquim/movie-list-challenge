@@ -24,4 +24,6 @@ COPY --from=builder /app/movielist.csv ./
 
 EXPOSE 5000
 
+USER node
+
 CMD ["node", "dist/server.js"]

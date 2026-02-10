@@ -70,9 +70,22 @@ src/
 
 ## API
 
-### GET /api/producers/intervals
+### Documentacao (Swagger)
 
-Retorna os produtores com maior e menor intervalo entre dois premios consecutivos. (Por mais que o retorno sejam arrays para min e max, dado a especificação, o resultado é um producer pra cada caso)
+A documentacao interativa da API esta disponivel em:
+`http://localhost:5000/api-docs`
+
+A rota raiz (`/`) redireciona automaticamente para a documentacao.
+
+### Health Check
+
+- `GET /health`: Retorna status da aplicacao, uptime e timestamp.
+
+### Endpoints Principais
+
+#### GET /api/producers/intervals
+
+Retorna os produtores com maior e menor intervalo entre dois premios consecutivos.
 
 **Exemplo de resposta:**
 
@@ -97,16 +110,9 @@ Retorna os produtores com maior e menor intervalo entre dois premios consecutivo
 }
 ```
 
-**Descricao:**
-
-- `min`: Array com todos os produtores que tiveram o menor intervalo entre dois premios consecutivos (pode haver multiplos em caso de empate)
-- `max`: Array com todos os produtores que tiveram o maior intervalo entre dois premios consecutivos (pode haver multiplos em caso de empate)
-- Apenas produtores com 2 ou mais premios sao considerados
-- Cada intervalo representa um par de premios consecutivos do mesmo produtor
-
 ## Banco de dados
 
-A aplicacao utiliza PostgreSQL em memoria atraves da biblioteca `pg-mem`. Os dados sao carregados automaticamente do arquivo `movielist.csv` na inicializacao da aplicacao.
+A aplicacao utiliza PostgreSQL em memoria atraves da biblioteca `pg-mem`. Os dados sao carregados automaticamente do arquivo `movielist.csv` na inicializacao.
 
 **Importante**: O arquivo `movielist.csv` deve estar na raiz do projeto.
 
@@ -114,7 +120,7 @@ A aplicacao utiliza PostgreSQL em memoria atraves da biblioteca `pg-mem`. Os dad
 
 - `npm run dev` / `yarn dev` - Inicia o servidor em modo desenvolvimento
 - `npm run build` / `yarn build` - Compila o TypeScript
-- `npm start` / `yarn start` - Inicia o servidor em producao
+- `npm start` / `yarn start` - Inicia o servidor em producao (requer build previo)
 - `npm test` / `yarn test` - Executa os testes de integracao
 - `npm run lint` / `yarn lint` - Executa o linter
 - `npm run format` / `yarn format` - Formata o codigo com Prettier
