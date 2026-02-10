@@ -1,5 +1,6 @@
 import { createApp } from './app';
 import { initializeDatabase } from './config/database';
+import { logger } from './infrastructure/logger/logger';
 
 const PORT = process.env.PORT || 5000;
 
@@ -9,10 +10,11 @@ async function startServer() {
     const app = createApp();
 
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      logger.info(`Server running on port ${PORT}`);
+      logger.info(`Documentation available at http://localhost:${PORT}/api-docs`);
     });
   } catch (error) {
-    console.error('Failed to start server:', error);
+    logger.error(error, 'Failed to start server');
     process.exit(1);
   }
 }
